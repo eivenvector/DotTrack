@@ -1,0 +1,352 @@
+Python Script without detaching the cid
+Python Script without detaching the cid
+Running iteration 1
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 2
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1aca58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 3
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b8ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 4
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 5
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f2aeb00>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 6
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1aab00>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 7
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 8
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10872d320>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 9
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f794ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 10
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f407a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 11
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1c3ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 12
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0ac9e8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 13
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 14
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f507a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 15
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b8b00>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 16
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f507a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 17
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 18
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1ada90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 19
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f507a90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 20
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b9ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 21
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f2c0a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 22
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f407a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 23
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x108647240>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 24
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10864f208>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 25
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b7a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 416, in __call__
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 514, in _remove_proxy
+TypeError: 'NoneType' object is not callable
+Running iteration 26
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 27
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f508a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 28
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1aea20>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 29
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1aeac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 416, in __call__
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 516, in _remove_proxy
+  File "/Users/ivan/anaconda3/lib/python3.5/weakref.py", line 365, in __getitem__
+TypeError: 'NoneType' object is not callable
+Running iteration 30
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b9ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 31
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 32
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 33
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1c2a20>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 34
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b7a90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+TypeError: 'NoneType' object is not callable
+Running iteration 35
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1aba90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 36
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0b8a90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 37
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0a5ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 38
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10efb9b38>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 416, in __call__
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 514, in _remove_proxy
+TypeError: 'NoneType' object is not callable
+Running iteration 39
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1c2ac8>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 40
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 41
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 42
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1adb00>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 43
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f2aca90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 44
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 45
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f0aba58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 416, in __call__
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 514, in _remove_proxy
+TypeError: 'NoneType' object is not callable
+Running iteration 46
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10fc07a90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 47
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f1aea58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 48
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10886e198>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 49
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f609a58>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'
+Running iteration 50
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Exception ignored in: <bound method _BoundMethodProxy._destroy of <matplotlib.cbook._BoundMethodProxy object at 0x10f2ada90>>
+Traceback (most recent call last):
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 377, in _destroy
+  File "/Users/ivan/anaconda3/lib/python3.5/site-packages/matplotlib/cbook.py", line 410, in __call__
+AttributeError: 'NoneType' object has no attribute 'MethodType'

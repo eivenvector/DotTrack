@@ -1,0 +1,147 @@
+Running iteration 1
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 2
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 3
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 4
+The window will close.
+Running iteration 5
+The window will close.
+Running iteration 6
+The window will close.
+Running iteration 7
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 8
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 9
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 10
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 11
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 12
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 13
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 14
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 15
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 16
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 17
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 18
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 19
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 20
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 21
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 22
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 23
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 24
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 25
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 26
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 27
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 28
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 29
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 30
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 31
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 32
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 33
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 34
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 35
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 36
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 37
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 38
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 39
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 40
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 41
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 42
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 43
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 44
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 45
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 46
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 47
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 48
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 49
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
+Running iteration 50
+QObject::killTimer: Timers cannot be stopped from another thread
+The window will close.
