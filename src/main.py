@@ -13,13 +13,13 @@ import matplotlib as mpl
 import matplotlib.animation as animation
 
 from threading import Timer
-
+import boundarycollision
 import random
 
 FACE_COLOR = 'black'
 START_FULLSCREEN = True
 DEBUG_MODE = True
-NUMBER_OF_DOTS = 10
+NUMBER_OF_DOTS = 1
 
 class Window(QDialog):
     def __init__(self, parent=None):
@@ -186,18 +186,28 @@ class Window(QDialog):
         self.ax.set_xlim([0, self.WIDTH])
         self.setup_dots()
         self.draw_dots()
+        self.animate_plot()
 
     def update_line(self, num, data, line):
         line.set_data(data[..., :num])
         return line,
 
-    def animate_plot(self):
-        data = np.random.rand(2, 25)
-        l, = self.ax.plot([], [], 'r-')
-        self.circle = Circle((0.5, 0.5), 1)
-        self.ax.add_artist(self.circle)
+    def update_dots(self, i):
+        detector = boundarycollision.BoundaryCollisionDetector(self)
+        for dot in self.dots:
+            dot.center = dot.center[0] * 1.005, dot.center[1]*1.005
+        print(detector.detect_collision(self.dots[0]))
+        self.canvas.draw()
+        return self.dots
 
-        self.line_ani = animation.FuncAnimation(self.figure , self.update_line, 25, fargs=(data, l),interval=50, blit=True)
+    def animate_plot(self):
+        self.dot_ani = animation.FuncAnimation(self.figure, self.update_dots, 25, interval=50, blit=True)
+        # data = np.random.rand(2, 25)
+        # l, = self.ax.plot([], [], 'r-')
+        # self.circle = Circle((0.5, 0.5), 1)
+        # self.ax.add_artist(self.circle)
+        #
+        # self.line_ani = animation.FuncAnimation(self.figure , self.update_line, 25, fargs=(data, l),interval=50, blit=True)
 
     def setup_figure(self):
         '''Setup figure to eliminate the toolbar and resizing.
