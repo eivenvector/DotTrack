@@ -29,17 +29,16 @@ class BoundaryCollisionDetector:
         Args:
             entity: The object whose velocity will be updated.
         """
-        collision_type = detect_collision(entity)
+        collision_type = self.detect_collision(entity)
         if (collision_type > 0):
             if (collision_type == 4):
                 ## This is a top or bottom collision
-                entity.velocity[1] *= -1
-            else if(collision_type == 1):
+                entity.velocity = entity.velocity[0] , entity.velocity[1] * -1
+            elif(collision_type == 1):
                 ## This is a left or right collision
-                entity.velocity[0] *= -1
-            else if (collision_type > 4):
+                entity.velocity = entity.velocity[0] * -1, entity.velocity[1]
+            elif (collision_type > 4):
                 ## This is multiple collision occuring
-                entity.velocity[0] *= -1
-                entity.velocity[1] *= -1
+                entity.velocity = entity.velocity[0] * -1, entity.velocity[1] * -1
         else:
             return

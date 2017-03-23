@@ -13,13 +13,19 @@ import matplotlib as mpl
 import matplotlib.animation as animation
 
 from threading import Timer
-import boundarycollision
+from boundarycollision import BoundaryCollisionDetector
+from trackabledot import TrackableDot
 import random
 
 FACE_COLOR = 'black'
+RADIUS = 0.3
+COLOR = 'red'
 START_FULLSCREEN = True
 DEBUG_MODE = True
-NUMBER_OF_DOTS = 1
+NUMBER_OF_DOTS = 10
+VELOCITY = 3 # in data units / s
+TRIAL_DURATION = 1 * 1000 # in ms
+INTERVAL = 50 # in ms
 
 class Window(QDialog):
     def __init__(self, parent=None):
@@ -58,9 +64,8 @@ class Window(QDialog):
         This method does not draw them or add them to the canvas.
         """
         self.remove_dots()
-        radius = 0.3
         for i in range(NUMBER_OF_DOTS):
-            self.dots.append(Circle((self.generate_location(self.dots, radius)), radius, color='red'))
+            self.dots.append(TrackableDot((self.generate_location(self.dots, RADIUS)), RADIUS, COLOR, self.generate_velocity(VELOCITY), i))
 
     def draw_dots(self):
         """Uses the dots list and adds the circles to the canvas and draws them.
@@ -69,6 +74,15 @@ class Window(QDialog):
         for i in range(len(self.dots)):
             self.ax.add_artist(self.dots[i])
         self.canvas.draw()
+
+    def generate_velocity(self, mag=1.0):
+        """ Generate a velocity with magnitude of mag.
+        Returns:
+            vel: a velocity vector as a 2-tuple
+        """
+        vel = np.random.uniform(-1,1), np.random.uniform(-1,1)
+        normalization = np.sqrt(vel[0]**2 + vel[1]**2)
+        return vel[0]/normalization * mag, vel[1]/normalization * mag
 
     def generate_location(self, dots_list, radius):
         """Generates a location using the width and height of the window.
@@ -146,6 +160,7 @@ class Window(QDialog):
         """Checks to see if tracking is currently active, if it is it stops
         the animation and allows the window to be resized.
         """
+        self.canvas.draw()
         self.track_button.setEnabled(True)
         self.remove_dots()
         print("Dots Removed")
@@ -180,6 +195,7 @@ class Window(QDialog):
         """Action when tracking button clicked.
         Validate the textField.text value and begin the animation sequence.
         """
+        print(self.ax.has_data())
         self.track_button.setEnabled(False)
         self.grab_default_dimensions()
         self.ax.set_ylim([0, self.HEIGHT])
@@ -187,21 +203,27 @@ class Window(QDialog):
         self.setup_dots()
         self.draw_dots()
         self.animate_plot()
+        self.canvas.draw()
+        # print(self.ax.has_data())
 
     def update_line(self, num, data, line):
         line.set_data(data[..., :num])
         return line,
 
     def update_dots(self, i):
-        detector = boundarycollision.BoundaryCollisionDetector(self)
+        detector = BoundaryCollisionDetector(self)
         for dot in self.dots:
-            dot.center = dot.center[0] * 1.005, dot.center[1]*1.005
-        print(detector.detect_collision(self.dots[0]))
-        self.canvas.draw()
+            dot.update_position(.05)
+            # dot.center = dot.center[0] * 1.005, dot.center[1]*1.005
+            dot.colliding = detector.detect_collision(dot)
+        for dot in self.dots:
+            detector.update_velocity(dot)
+        self.canvas.update()
+        print("this is running")
         return self.dots
 
     def animate_plot(self):
-        self.dot_ani = animation.FuncAnimation(self.figure, self.update_dots, 25, interval=50, blit=True)
+        self.dot_ani = animation.FuncAnimation(self.figure, self.update_dots, int(TRIAL_DURATION/INTERVAL), interval=INTERVAL, repeat=False)
         # data = np.random.rand(2, 25)
         # l, = self.ax.plot([], [], 'r-')
         # self.circle = Circle((0.5, 0.5), 1)
@@ -266,6 +288,7 @@ class Window(QDialog):
         '''
         print("click detected")
         selected_dot = self.detect_clicked_dot(self.dots, event)
+        print(selected_dot)
         if selected_dot != None:
             selected_dot.set_color('green')
             self.canvas.draw()
