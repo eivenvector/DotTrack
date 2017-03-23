@@ -31,7 +31,7 @@ class Window(QDialog):
         # This is to make the QDialog Window full size.
         if START_FULLSCREEN:
             self.showMaximized()
-            
+            self.setFixedSize(self.size())
 
 
         self.canvas = FigureCanvas(self.figure)
@@ -42,6 +42,9 @@ class Window(QDialog):
         # setup the gui
         self.setup_ui()
 
+        # initialize the dots list
+        self.dots = []
+
         # This is used to open and close the app and log the output using the
         # open_close bash script.
         if DEBUG_MODE:
@@ -51,23 +54,40 @@ class Window(QDialog):
                 t.start()
 
     def setup_dots(self):
-        self.dots = []
+        """Removes any dots on the canvas and generates a new list of them.
+        This method does not draw them or add them to the canvas.
+        """
+        self.remove_dots()
         radius = 0.3
         for i in range(NUMBER_OF_DOTS):
-            self.dots.append(Circle((self.generate_location()), radius, color='red'))
+            self.dots.append(Circle((self.generate_location(self.dots, radius)), radius, color='red'))
 
     def draw_dots(self):
+        """Uses the dots list and adds the circles to the canvas and draws them.
+        This method does not create the circle objects.
+        """
         for i in range(len(self.dots)):
             self.ax.add_artist(self.dots[i])
         self.canvas.draw()
 
-    def generate_location(self):
+    def generate_location(self, dots_list, radius):
         """Generates a location using the width and height of the window.
+        Args:
+            dots_list: a list of generated dots, used to prevent location collisions
+            radius: the size of the dots in the list
         Returns:
             a tuple which represents the location.
         """
-
-        return (np.random.uniform(0.1, 0.9) * self.WIDTH, np.random.uniform(0.1, 0.9) * self.HEIGHT)
+        location = (np.random.uniform(0.1, 0.9) * self.WIDTH, np.random.uniform(0.1, 0.9) * self.HEIGHT)
+        should_restart = True
+        while should_restart:
+            should_restart = False
+            for dot in dots_list:
+                if (np.sqrt((location[0] - dot.center[0])**2 + (location[1] - dot.center[1])**2)) < (5 * radius):
+                    location = (np.random.uniform(0.1, 0.9) * self.WIDTH, np.random.uniform(0.1, 0.9) * self.HEIGHT)
+                    should_restart = True
+                    break
+        return location
 
     def grab_default_dimensions(self):
         """Stores default dimensions in order to allow resizing after tracking
@@ -113,11 +133,22 @@ class Window(QDialog):
         layout.addLayout(bottom_layout)
         self.setLayout(layout)
 
+    def remove_dots(self):
+        """Iterate through the dots array and delete them while removing them
+        from the canvas.
+        """
+        for dot in self.dots:
+            dot.remove()
+        self.dots = []
+        self.canvas.draw()
+
     def stop_tracking_button_clicked(self, event):
         """Checks to see if tracking is currently active, if it is it stops
         the animation and allows the window to be resized.
         """
-        self.reset_sizing()
+        self.track_button.setEnabled(True)
+        self.remove_dots()
+        print("Dots Removed")
         try:
             self.line_ani._stop()
         except AttributeError:
@@ -149,6 +180,7 @@ class Window(QDialog):
         """Action when tracking button clicked.
         Validate the textField.text value and begin the animation sequence.
         """
+        self.track_button.setEnabled(False)
         self.grab_default_dimensions()
         self.ax.set_ylim([0, self.HEIGHT])
         self.ax.set_xlim([0, self.WIDTH])
@@ -194,11 +226,39 @@ class Window(QDialog):
         self.canvas.draw()
         self.cid = self.figure.canvas.mpl_connect('button_press_event', self.onclick)
 
+
+    def _distance(self, loc1, loc2):
+        """Outputs distance between two tuples (x, y)
+        Args:
+            loc1/2: locations for distances to be computed
+        Returns:
+            dist: float value of distance
+        """
+        return np.sqrt((loc1[0] - loc2[0])**2 + (loc1[1] - loc2[1])**2)
+
+    def detect_clicked_dot(self, dots_list, event):
+        """Uses an events location and returns a mpl.patches object corresponding
+        to the click.
+        Args:
+            dots_list: A list of circle patch objects
+            event: The event which triggered the call (contains location)
+        Returns:
+            circle: mpl.patches.Circle object which was clicked or None
+        """
+        circle = None
+        for dot in dots_list:
+            if self._distance(dot.center, (event.xdata, event.ydata)) < dot.radius:
+                return dot
+        return circle
+
     def onclick(self, event):
         '''Event handler which prints information about the click.
         '''
         print("click detected")
-        print(event.x)
+        selected_dot = self.detect_clicked_dot(self.dots, event)
+        if selected_dot != None:
+            selected_dot.set_color('green')
+            self.canvas.draw()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
