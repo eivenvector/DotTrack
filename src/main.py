@@ -12,8 +12,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.animation as animation
 
-from multiprocessing import Process
-from threading import Timer
 from boundarycollision import BoundaryCollisionDetector
 from trackabledot import TrackableDot
 import random
