@@ -4,6 +4,7 @@ class TrackableDot(Circle):
     def __init__(self, center, radius, color, velocity, idnum):
         super(TrackableDot, self).__init__(center, radius, color=color)
         self.velocity = velocity
+        self.color = color
         self.colliding = 0
         self.id = idnum
 

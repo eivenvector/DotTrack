@@ -12,30 +12,22 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.animation as animation
 
+from multiprocessing import Process
 from threading import Timer
 from boundarycollision import BoundaryCollisionDetector
 from trackabledot import TrackableDot
 import random
-
-FACE_COLOR = 'black'
-RADIUS = 0.3
-COLOR = 'red'
-START_FULLSCREEN = True
-DEBUG_MODE = True
-NUMBER_OF_DOTS = 10
-VELOCITY = 3 # in data units / s
-TRIAL_DURATION = 1 * 1000 # in ms
-INTERVAL = 50 # in ms
+import time
 
 class Window(QDialog):
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
-
+        self._define_constants()
         # a figure instance to plot on
-        self.figure = Figure(facecolor=FACE_COLOR)
+        self.figure = Figure(facecolor=self.FACE_COLOR)
 
         # This is to make the QDialog Window full size.
-        if START_FULLSCREEN:
+        if self.START_FULLSCREEN:
             self.showMaximized()
             self.setFixedSize(self.size())
 
@@ -50,22 +42,39 @@ class Window(QDialog):
 
         # initialize the dots list
         self.dots = []
+        self.tracked_dots = {}
 
         # This is used to open and close the app and log the output using the
         # open_close bash script.
-        if DEBUG_MODE:
+        if self.DEBUG_MODE:
             if len(sys.argv) == 2:
                 self.argument = float(sys.argv[1])
                 t = Timer(self.argument, self.close)
                 t.start()
+
+    def _define_constants(self):
+        self.FACE_COLOR = 'black'
+        self.RADIUS = 0.3
+        self.COLOR = 'red'
+        self.BLINKING_COLOR = 'green'
+        self.START_FULLSCREEN = True
+        self.DEBUG_MODE = True
+        self.NUMBER_OF_DOTS = 10
+        self.NUMBER_OF_TRACK_DOTS = 2
+        self.VELOCITY = 3 # in data units / s
+        self.BLINKING_DURATION = 2 * 1000 # in ms
+        self.TRIAL_DURATION = 17 * 1000 # in ms
+        self.INTERVAL = 50 # in ms
+        self.TRIAL_ACTIVE = False
+
 
     def setup_dots(self):
         """Removes any dots on the canvas and generates a new list of them.
         This method does not draw them or add them to the canvas.
         """
         self.remove_dots()
-        for i in range(NUMBER_OF_DOTS):
-            self.dots.append(TrackableDot((self.generate_location(self.dots, RADIUS)), RADIUS, COLOR, self.generate_velocity(VELOCITY), i))
+        for i in range(self.NUMBER_OF_DOTS):
+            self.dots.append(TrackableDot((self.generate_location(self.dots, self.RADIUS)), self.RADIUS, self.COLOR, self.generate_velocity(self.VELOCITY), i))
 
     def draw_dots(self):
         """Uses the dots list and adds the circles to the canvas and draws them.
@@ -74,6 +83,16 @@ class Window(QDialog):
         for i in range(len(self.dots)):
             self.ax.add_artist(self.dots[i])
         self.canvas.draw()
+
+    def track_dots(self, num):
+        """Sets up a dictionary and in order to start the tracking.
+        Args:
+            num: an integer less than self.NUMBER_OF_DOTS, this determines the number
+            of tracked dots.
+        """
+        self.tracked_dots = {}
+        for i in range(num):
+            self.tracked_dots[self.dots[i].id] = (self.dots[i])
 
     def generate_velocity(self, mag=1.0):
         """ Generate a velocity with magnitude of mag.
@@ -160,10 +179,10 @@ class Window(QDialog):
         """Checks to see if tracking is currently active, if it is it stops
         the animation and allows the window to be resized.
         """
+        print(self.TRIAL_ACTIVE)
         self.canvas.draw()
         self.track_button.setEnabled(True)
         self.remove_dots()
-        print("Dots Removed")
         try:
             self.line_ani._stop()
         except AttributeError:
@@ -188,48 +207,79 @@ class Window(QDialog):
         """Handles resize event and updates the default dimesions.
         """
         self.grab_default_dimensions()
-        print("width: %f, height: %f" % (self.WIDTH, self.HEIGHT))
 
 
     def begin_tracking_button_clicked(self):
         """Action when tracking button clicked.
         Validate the textField.text value and begin the animation sequence.
         """
-        print(self.ax.has_data())
         self.track_button.setEnabled(False)
         self.grab_default_dimensions()
         self.ax.set_ylim([0, self.HEIGHT])
         self.ax.set_xlim([0, self.WIDTH])
         self.setup_dots()
         self.draw_dots()
+        self.canvas.draw()
+        self.track_dots(self.NUMBER_OF_TRACK_DOTS)
+        # self.animate_blink()
         self.animate_plot()
         self.canvas.draw()
-        # print(self.ax.has_data())
-
-    def update_line(self, num, data, line):
-        line.set_data(data[..., :num])
-        return line,
+        print(self.TRIAL_ACTIVE)
 
     def update_dots(self, i):
         detector = BoundaryCollisionDetector(self)
         for dot in self.dots:
             dot.update_position(.05)
-            # dot.center = dot.center[0] * 1.005, dot.center[1]*1.005
             dot.colliding = detector.detect_collision(dot)
         for dot in self.dots:
             detector.update_velocity(dot)
-        self.canvas.update()
-        print("this is running")
         return self.dots
 
+    def _blink_stage(self, i):
+        """Uses stored values to use one animation function to first blink
+        then move the dots.
+        Args:
+            i: the current iteration value
+        Returns:
+            blinking: a boolean which denotes if it is in the blinking stage.
+        """
+        num_iter = int(self.TRIAL_DURATION/self.INTERVAL)
+        if (i < int(num_iter / self.TRIAL_DURATION * self.BLINKING_DURATION)):
+            return True
+        else:
+            return False
+
+    def conduct_trial(self, i):
+        if (self._blink_stage(i)):
+            if i == 0:
+                print(self.TRIAL_ACTIVE)
+                self.TRIAL_ACTIVE = True
+                print(self.TRIAL_ACTIVE)
+            if i % 6 == 0:
+                self.blink_dots(i)
+        elif (i + 1 == int(self.TRIAL_DURATION/self.INTERVAL)):
+            self.TRIAL_ACTIVE = False
+        else:
+            self.update_dots(i)
+
+
     def animate_plot(self):
-        self.dot_ani = animation.FuncAnimation(self.figure, self.update_dots, int(TRIAL_DURATION/INTERVAL), interval=INTERVAL, repeat=False)
-        # data = np.random.rand(2, 25)
-        # l, = self.ax.plot([], [], 'r-')
-        # self.circle = Circle((0.5, 0.5), 1)
-        # self.ax.add_artist(self.circle)
-        #
-        # self.line_ani = animation.FuncAnimation(self.figure , self.update_line, 25, fargs=(data, l),interval=50, blit=True)
+        self.dot_ani = animation.FuncAnimation(self.figure, self.conduct_trial, int(self.TRIAL_DURATION/self.INTERVAL), interval=self.INTERVAL, repeat=False)
+
+    def blink_dots(self, i):
+        """Uses the dictionary of tracked dots and blinks them.
+        """
+        for dot in self.tracked_dots.values():
+            if dot.color == self.BLINKING_COLOR:
+                dot.set_color(self.COLOR)
+                dot.color = self.COLOR
+            else:
+                dot.set_color(self.BLINKING_COLOR)
+                dot.color = self.BLINKING_COLOR
+            # self.canvas.draw()
+
+    def animate_blink(self):
+        self.blink_ani = animation.FuncAnimation(self.figure, self.blink_dots, 9, interval=400, repeat=False)
 
     def setup_figure(self):
         '''Setup figure to eliminate the toolbar and resizing.
@@ -288,10 +338,10 @@ class Window(QDialog):
         '''
         print("click detected")
         selected_dot = self.detect_clicked_dot(self.dots, event)
-        print(selected_dot)
         if selected_dot != None:
-            selected_dot.set_color('green')
-            self.canvas.draw()
+            if(selected_dot.id in self.tracked_dots):
+                selected_dot.set_color('green')
+                self.canvas.draw()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
