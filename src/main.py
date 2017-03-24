@@ -19,15 +19,29 @@ from trackabledot import TrackableDot
 import random
 import time
 
+FACE_COLOR = 'black'
+RADIUS = 0.3
+COLOR = 'red'
+BLINKING_COLOR = 'green'
+START_FULLSCREEN = True
+NUMBER_OF_DOTS = 10
+NUMBER_OF_TRACK_DOTS = 2
+VELOCITY = 3 # in data units / s
+BLINKING_DURATION = 2 * 1000 # in ms
+TRIAL_DURATION = 17 * 1000 # in ms
+INTERVAL = 50 # in ms
+TRIAL_DICTIONARY = {0: 2, 1: 2, 2: 2, 3: 3, 4: 3,
+                    5: 3, 6: 3, 7: 3, 8: 4, 9: 4,
+                    10: 4, 11: 4, 12: 5, 13: 5, 14: 5, 15: 5} # Follows {trial: NUM_DOTS}
+
 class Window(QDialog):
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
-        self._define_constants()
         # a figure instance to plot on
-        self.figure = Figure(facecolor=self.FACE_COLOR)
+        self.figure = Figure(facecolor=FACE_COLOR)
 
         # This is to make the QDialog Window full size.
-        if self.START_FULLSCREEN:
+        if START_FULLSCREEN:
             self.showMaximized()
             self.setFixedSize(self.size())
 
@@ -44,37 +58,18 @@ class Window(QDialog):
         self.dots = []
         self.tracked_dots = {}
 
-        # This is used to open and close the app and log the output using the
-        # open_close bash script.
-        if self.DEBUG_MODE:
-            if len(sys.argv) == 2:
-                self.argument = float(sys.argv[1])
-                t = Timer(self.argument, self.close)
-                t.start()
-
-    def _define_constants(self):
-        self.FACE_COLOR = 'black'
-        self.RADIUS = 0.3
-        self.COLOR = 'red'
-        self.BLINKING_COLOR = 'green'
-        self.START_FULLSCREEN = True
-        self.DEBUG_MODE = True
-        self.NUMBER_OF_DOTS = 10
-        self.NUMBER_OF_TRACK_DOTS = 2
-        self.VELOCITY = 3 # in data units / s
-        self.BLINKING_DURATION = 2 * 1000 # in ms
-        self.TRIAL_DURATION = 17 * 1000 # in ms
-        self.INTERVAL = 50 # in ms
-        self.TRIAL_ACTIVE = False
-
+        # keep track of the trials
+        self.trial_active = False
+        self.trial_dictionary = TRIAL_DICTIONARY
+        self.trial_id = 0
 
     def setup_dots(self):
         """Removes any dots on the canvas and generates a new list of them.
         This method does not draw them or add them to the canvas.
         """
         self.remove_dots()
-        for i in range(self.NUMBER_OF_DOTS):
-            self.dots.append(TrackableDot((self.generate_location(self.dots, self.RADIUS)), self.RADIUS, self.COLOR, self.generate_velocity(self.VELOCITY), i))
+        for i in range(NUMBER_OF_DOTS):
+            self.dots.append(TrackableDot((self.generate_location(self.dots, RADIUS)), RADIUS, COLOR, self.generate_velocity(VELOCITY), i))
 
     def draw_dots(self):
         """Uses the dots list and adds the circles to the canvas and draws them.
@@ -87,7 +82,7 @@ class Window(QDialog):
     def track_dots(self, num):
         """Sets up a dictionary and in order to start the tracking.
         Args:
-            num: an integer less than self.NUMBER_OF_DOTS, this determines the number
+            num: an integer less than NUMBER_OF_DOTS, this determines the number
             of tracked dots.
         """
         self.tracked_dots = {}
@@ -179,7 +174,7 @@ class Window(QDialog):
         """Checks to see if tracking is currently active, if it is it stops
         the animation and allows the window to be resized.
         """
-        print(self.TRIAL_ACTIVE)
+        print(self.trial_active)
         self.canvas.draw()
         self.track_button.setEnabled(True)
         self.remove_dots()
@@ -220,11 +215,11 @@ class Window(QDialog):
         self.setup_dots()
         self.draw_dots()
         self.canvas.draw()
-        self.track_dots(self.NUMBER_OF_TRACK_DOTS)
+        self.track_dots(NUMBER_OF_TRACK_DOTS)
         # self.animate_blink()
         self.animate_plot()
         self.canvas.draw()
-        print(self.TRIAL_ACTIVE)
+        print(self.trial_active)
 
     def update_dots(self, i):
         detector = BoundaryCollisionDetector(self)
@@ -243,8 +238,8 @@ class Window(QDialog):
         Returns:
             blinking: a boolean which denotes if it is in the blinking stage.
         """
-        num_iter = int(self.TRIAL_DURATION/self.INTERVAL)
-        if (i < int(num_iter / self.TRIAL_DURATION * self.BLINKING_DURATION)):
+        num_iter = int(TRIAL_DURATION/INTERVAL)
+        if (i < int(num_iter / TRIAL_DURATION * BLINKING_DURATION)):
             return True
         else:
             return False
@@ -252,30 +247,30 @@ class Window(QDialog):
     def conduct_trial(self, i):
         if (self._blink_stage(i)):
             if i == 0:
-                print(self.TRIAL_ACTIVE)
-                self.TRIAL_ACTIVE = True
-                print(self.TRIAL_ACTIVE)
+                print(self.trial_active)
+                self.trial_active = True
+                print(self.trial_active)
             if i % 6 == 0:
                 self.blink_dots(i)
-        elif (i + 1 == int(self.TRIAL_DURATION/self.INTERVAL)):
-            self.TRIAL_ACTIVE = False
+        elif (i + 1 == int(TRIAL_DURATION/INTERVAL)):
+            self.trial_active = False
         else:
             self.update_dots(i)
 
 
     def animate_plot(self):
-        self.dot_ani = animation.FuncAnimation(self.figure, self.conduct_trial, int(self.TRIAL_DURATION/self.INTERVAL), interval=self.INTERVAL, repeat=False)
+        self.dot_ani = animation.FuncAnimation(self.figure, self.conduct_trial, int(TRIAL_DURATION/INTERVAL), interval=INTERVAL, repeat=False)
 
     def blink_dots(self, i):
         """Uses the dictionary of tracked dots and blinks them.
         """
         for dot in self.tracked_dots.values():
-            if dot.color == self.BLINKING_COLOR:
-                dot.set_color(self.COLOR)
-                dot.color = self.COLOR
+            if dot.color == BLINKING_COLOR:
+                dot.set_color(COLOR)
+                dot.color = COLOR
             else:
-                dot.set_color(self.BLINKING_COLOR)
-                dot.color = self.BLINKING_COLOR
+                dot.set_color(BLINKING_COLOR)
+                dot.color = BLINKING_COLOR
             # self.canvas.draw()
 
     def animate_blink(self):
