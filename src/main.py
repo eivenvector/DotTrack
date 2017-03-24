@@ -1,11 +1,9 @@
 import sys
 from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, \
-                            QLineEdit, QHBoxLayout
-
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
-
-
+                            QLineEdit, QHBoxLayout, QLabel
+from PyQt5.QtGui import QFont
 import numpy as np
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.patches import Circle
 import matplotlib.pyplot as plt
@@ -17,20 +15,23 @@ from trackabledot import TrackableDot
 import random
 import time
 
-FACE_COLOR = 'black'
+FACE_COLOR = 'white'
 RADIUS = 0.3
-COLOR = 'red'
+DT = 0.05
+COLOR = 'black'
 BLINKING_COLOR = 'green'
+INCORRECT_COLOR = 'red'
 START_FULLSCREEN = True
 NUMBER_OF_DOTS = 10
 NUMBER_OF_TRACK_DOTS = 2
 VELOCITY = 3 # in data units / s
 BLINKING_DURATION = 2 * 1000 # in ms
 TRIAL_DURATION = 17 * 1000 # in ms
-INTERVAL = 50 # in ms
+INTERVAL = 30 # in ms
 TRIAL_DICTIONARY = {0: 2, 1: 2, 2: 2, 3: 3, 4: 3,
                     5: 3, 6: 3, 7: 3, 8: 4, 9: 4,
                     10: 4, 11: 4, 12: 5, 13: 5, 14: 5, 15: 5} # Follows {trial: NUM_DOTS}
+
 
 class Window(QDialog):
     def __init__(self, parent=None):
@@ -60,6 +61,8 @@ class Window(QDialog):
         self.trial_active = False
         self.trial_dictionary = TRIAL_DICTIONARY
         self.trial_id = 0
+        self.trial_clicks = self.trial_dictionary[self.trial_id]
+        self.clicked_dots = []
 
     def setup_dots(self):
         """Removes any dots on the canvas and generates a new list of them.
@@ -143,20 +146,34 @@ class Window(QDialog):
         self.stop_button.setMaximumWidth(200)
 
         # text field setup
-        self.textField = QLineEdit()
-        self.textField.setPlaceholderText("Patient ID")
-        self.textField.setMaximumWidth(200)
+        self.text_field = QLineEdit()
+        self.text_field.setPlaceholderText("Patient ID")
+        self.text_field.setMaximumWidth(200)
+
+        # next button setup
+        self.next_button = QPushButton('Next Trial')
+        self.next_button.clicked.connect(self.next_button_clicked)
+        self.next_button.setMaximumWidth(200)
+
+        # Info label setup
+        self.info_label = QLabel("Trial #0 -- 2 Clicks Left")
+        self.info_label.setMaximumWidth(300)
+        self.info_label.setMinimumWidth(300)
+        self.info_label.setMaximumHeight(20)
+        self.info_label.setFont(QFont("Arial",20, QFont.Normal ))
 
         # Set up the bottom layout
-        bottom_layout = QHBoxLayout()
-        bottom_layout.addWidget(self.track_button)
-        bottom_layout.addWidget(self.stop_button)
-        bottom_layout.addWidget(self.textField)
+        self.bottom_layout = QHBoxLayout()
+        self.bottom_layout.addWidget(self.track_button)
+        self.bottom_layout.addWidget(self.stop_button)
+        self.bottom_layout.addWidget(self.info_label)
+        self.bottom_layout.addWidget(self.next_button)
+        self.bottom_layout.addWidget(self.text_field)
 
         # set the whole layout
         layout = QVBoxLayout()
         layout.addWidget(self.canvas)
-        layout.addLayout(bottom_layout)
+        layout.addLayout(self.bottom_layout)
         self.setLayout(layout)
 
     def remove_dots(self):
@@ -167,19 +184,6 @@ class Window(QDialog):
             dot.remove()
         self.dots = []
         self.canvas.draw()
-
-    def stop_tracking_button_clicked(self, event):
-        """Checks to see if tracking is currently active, if it is it stops
-        the animation and allows the window to be resized.
-        """
-        print(self.trial_active)
-        self.canvas.draw()
-        self.track_button.setEnabled(True)
-        self.remove_dots()
-        try:
-            self.line_ani._stop()
-        except AttributeError:
-            pass
 
     def closeEvent(self, event):
         """This method is called when the application is closing.
@@ -201,28 +205,61 @@ class Window(QDialog):
         """
         self.grab_default_dimensions()
 
+    def next_button_clicked(self):
+        """Start the trial and updates the instance variables about the current
+        trial.
+        """
+        self.setup_dots()
+        self.draw_dots()
+        self.canvas.draw()
+        self.track_dots(NUMBER_OF_TRACK_DOTS)
+        self.animate_plot(self.trial_id)
+        self.canvas.draw()
 
     def begin_tracking_button_clicked(self):
         """Action when tracking button clicked.
         Validate the textField.text value and begin the animation sequence.
         """
-        self.track_button.setEnabled(False)
         self.grab_default_dimensions()
         self.ax.set_ylim([0, self.HEIGHT])
         self.ax.set_xlim([0, self.WIDTH])
-        self.setup_dots()
-        self.draw_dots()
+        if (self.has_valid_pid()):
+            self.track_button.setEnabled(False)
+            self.track_button.setText('Tracking ...')
+
+    def stop_tracking_button_clicked(self, event):
+        """Checks to see if tracking is currently active, if it is it stops
+        the animation and allows the window to be resized.
+        """
         self.canvas.draw()
-        self.track_dots(NUMBER_OF_TRACK_DOTS)
-        # self.animate_blink()
-        self.animate_plot()
-        self.canvas.draw()
-        print(self.trial_active)
+        self.track_button.setEnabled(True)
+        self.track_button.setText('Begin Tracking')
+        self.remove_dots()
+        try:
+            self.dot_ani._stop()
+        except AttributeError:
+            pass
+
+
+    def has_valid_pid(self):
+        """Makes sure that the PID field is not empty.
+        Returns:
+            bool: True if it has a valid pid.
+        """
+        if self.text_field.text != "":
+            return True
+        return False
+
 
     def update_dots(self, i):
+        """Uses the velocity values of the dot and the detector class in order
+        to update the position of the dots.
+        Args:
+            i: generator for the animation
+        """
         detector = BoundaryCollisionDetector(self)
         for dot in self.dots:
-            dot.update_position(.05)
+            dot.update_position(DT)
             dot.colliding = detector.detect_collision(dot)
         for dot in self.dots:
             detector.update_velocity(dot)
@@ -242,22 +279,28 @@ class Window(QDialog):
         else:
             return False
 
-    def conduct_trial(self, i):
+    def conduct_subtrial(self, i, sub_id):
+        """Runs the animation of a sub trial. Modifies a instance variable which
+        keeps track whether the trial is active.
+        Args:
+            sub_id: uses the TRIAL_DICTIONARY to determine the setup.
+            i: generator for the animation
+        """
         if (self._blink_stage(i)):
             if i == 0:
-                print(self.trial_active)
+                self.begin = time.time()
                 self.trial_active = True
-                print(self.trial_active)
             if i % 6 == 0:
                 self.blink_dots(i)
         elif (i + 1 == int(TRIAL_DURATION/INTERVAL)):
             self.trial_active = False
+            self.trial_id += 1
+            self.trial_clicks = self.trial_dictionary[self.trial_id]
         else:
             self.update_dots(i)
 
-
-    def animate_plot(self):
-        self.dot_ani = animation.FuncAnimation(self.figure, self.conduct_trial, int(TRIAL_DURATION/INTERVAL), interval=INTERVAL, repeat=False)
+    def animate_plot(self, sub_id):
+        self.dot_ani = animation.FuncAnimation(self.figure, self.conduct_subtrial, int(TRIAL_DURATION/INTERVAL), fargs=(sub_id,), interval=INTERVAL, repeat=False)
 
     def blink_dots(self, i):
         """Uses the dictionary of tracked dots and blinks them.
@@ -271,8 +314,8 @@ class Window(QDialog):
                 dot.color = BLINKING_COLOR
             # self.canvas.draw()
 
-    def animate_blink(self):
-        self.blink_ani = animation.FuncAnimation(self.figure, self.blink_dots, 9, interval=400, repeat=False)
+    # def animate_blink(self):
+    #     self.blink_ani = animation.FuncAnimation(self.figure, self.blink_dots, 9, interval=400, repeat=False)
 
     def setup_figure(self):
         '''Setup figure to eliminate the toolbar and resizing.
@@ -311,6 +354,15 @@ class Window(QDialog):
         """
         return np.sqrt((loc1[0] - loc2[0])**2 + (loc1[1] - loc2[1])**2)
 
+    def dot_clicked(self):
+        """Updates the information label and the number of clicks left not in that
+        order :)
+        """
+        self.trial_clicks -= 1
+        new_string = "Trial #{} -- {} Clicks Left".format(self.trial_id, self.trial_clicks)
+        self.info_label.setText(new_string)
+        self.info_label.repaint()
+
     def detect_clicked_dot(self, dots_list, event):
         """Uses an events location and returns a mpl.patches object corresponding
         to the click.
@@ -323,18 +375,28 @@ class Window(QDialog):
         circle = None
         for dot in dots_list:
             if self._distance(dot.center, (event.xdata, event.ydata)) < dot.radius:
-                return dot
+                if circle is not None:
+                    if self._distance(dot.center, (event.xdata, event,ydata)) < self._distance(circle.center, (event.xdata, event.ydata)):
+                        circle = dot
+                else:
+                    circle = dot
         return circle
 
     def onclick(self, event):
         '''Event handler which prints information about the click.
         '''
-        print("click detected")
         selected_dot = self.detect_clicked_dot(self.dots, event)
-        if selected_dot != None:
+        if selected_dot != None and selected_dot not in self.clicked_dots and self.trial_clicks > 0:
             if(selected_dot.id in self.tracked_dots):
-                selected_dot.set_color('green')
+                self.clicked_dots.append(selected_dot)
+                selected_dot.set_color(BLINKING_COLOR)
                 self.canvas.draw()
+            else:
+                self.clicked_dots.append(selected_dot)
+                selected_dot.set_color(INCORRECT_COLOR)
+                self.canvas.draw()
+            self.dot_clicked()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
