@@ -1,6 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QDialog, QApplication, QPushButton, QVBoxLayout, \
-                            QLineEdit, QHBoxLayout, QLabel, QMessageBox
+                            QLineEdit, QHBoxLayout, QLabel, QMessageBox, \
+                            QFileDialog
 from PyQt5.QtGui import QFont
 import numpy as np
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -26,7 +27,7 @@ NUMBER_OF_DOTS = 10
 NUMBER_OF_TRACK_DOTS = 2
 VELOCITY = 3 # in data units / s
 BLINKING_DURATION = 2 * 1000 # in ms
-TRIAL_DURATION = 5 * 1000 # in ms
+TRIAL_DURATION = 3 * 1000 # in ms
 INTERVAL = 30 # in ms
 TRIAL_DICTIONARY = {0: 2, 1: 2, 2: 2, 3: 3, 4: 3,
                     5: 3, 6: 3, 7: 3, 8: 4, 9: 4,
@@ -61,9 +62,13 @@ class Window(QDialog):
         self.dot_motion_active = False
         self.clicking_active = False
         self.trial_dictionary = TRIAL_DICTIONARY
-        self.trial_id = 0
+        self.trial_id = 14
         self.trial_clicks = self.trial_dictionary[self.trial_id]
         self.clicked_dots = []
+        self.trial_starts = []
+        self.trial_durations = []
+        self.total_duration = 0
+        self.output_file = ""
 
     def setup_dots(self):
         """Removes any dots on the canvas and generates a new list of them.
@@ -144,6 +149,7 @@ class Window(QDialog):
         # stop button setup
         self.stop_button = QPushButton('Stop Tracking')
         self.stop_button.clicked.connect(self.stop_tracking_button_clicked)
+        self.stop_button.setEnabled(False)
         self.stop_button.setMaximumWidth(200)
 
         # text field setup
@@ -154,6 +160,7 @@ class Window(QDialog):
         # next button setup
         self.next_button = QPushButton('Next Trial')
         self.next_button.clicked.connect(self.next_button_clicked)
+        self.next_button.setEnabled(False)
         self.next_button.setMaximumWidth(200)
 
         # Info label setup
@@ -177,7 +184,15 @@ class Window(QDialog):
         self.pid_message.setText("Please add a Patient ID.")
         self.pid_message.setStandardButtons(QMessageBox.Ok)
 
+        # set up stop message box
+        self.stop_message = QMessageBox()
+        self.stop_message.setIcon(QMessageBox.Critical)
+        self.stop_message.setText("Are you sure you would like to stop tracking?")
+        self.stop_message.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
+        self.save_message = QMessageBox()
+        self.save_message.setIcon(QMessageBox.Information)
+        self.save_message.setText("")
         # set the whole layout
         layout = QVBoxLayout()
         layout.addWidget(self.canvas)
@@ -213,6 +228,11 @@ class Window(QDialog):
         """
         self.grab_default_dimensions()
 
+    def display_pid_message(self):
+        """Displays a message which requires a PID to be entered.
+        """
+        self.pid_message.exec_()
+
     def next_button_clicked(self):
         """Start the trial and updates the instance variables about the current
         trial. Make sure that clicking is not active and a new trial is ok to
@@ -227,12 +247,6 @@ class Window(QDialog):
             self.animate_plot()
             self.canvas.draw()
 
-    def display_pid_message(self):
-        """Displays a message which requires a PID to be entered.
-        """
-        self.pid_message.exec_()
-
-
     def begin_tracking_button_clicked(self):
         """Action when tracking button clicked.
         Validate the textField.text value and begin the animation sequence.
@@ -241,7 +255,8 @@ class Window(QDialog):
         self.ax.set_ylim([0, self.HEIGHT])
         self.ax.set_xlim([0, self.WIDTH])
         if (self.has_valid_pid()):
-
+            self.next_button.setEnabled(True)
+            self.text_field.setReadOnly(True)
             self.track_button.setEnabled(False)
             self.track_button.setText('Tracking ...')
         else:
@@ -251,14 +266,17 @@ class Window(QDialog):
         """Checks to see if tracking is currently active, if it is it stops
         the animation and allows the window to be resized.
         """
-        self.canvas.draw()
-        self.track_button.setEnabled(True)
-        self.track_button.setText('Begin Tracking')
-        self.remove_dots()
-        try:
-            self.dot_ani._stop()
-        except AttributeError:
-            pass
+        retval = self.stop_message.exec_()
+        if retval == QMessageBox.Yes:
+            self.text_field.setReadOnly(False)
+            self.canvas.draw()
+            self.track_button.setEnabled(True)
+            self.track_button.setText('Begin Tracking')
+            self.remove_dots()
+            try:
+                self.dot_ani._stop()
+            except AttributeError:
+                pass
 
 
     def has_valid_pid(self):
@@ -308,6 +326,7 @@ class Window(QDialog):
         """
         if (self._blink_stage(i)):
             if i == 0:
+                self.stop_button.setEnabled(False)
                 self.next_button.setEnabled(False)
                 self.dot_motion_active = True
             if i % 6 == 0:
@@ -316,6 +335,7 @@ class Window(QDialog):
             self.dot_motion_active = False
             self.clicking_active = True
             self.next_button.setEnabled(False)
+            self.trial_starts.append(time.time())
         else:
             self.update_dots(i)
 
@@ -378,6 +398,19 @@ class Window(QDialog):
         self.info_label.setText(new_string)
         self.info_label.repaint()
 
+    def end_trial(self):
+        """End the trial of 15 subtrials and reset the page. Also write output
+        file.
+        """
+        self.next_button.setEnabled(False)
+        self.track_button.setEnabled(True)
+        self.track_button.setText("Begin Tracking")
+        self.stop_button.setEnabled(False)
+        self.text_field.setReadOnly(False)
+        self.clicked_dots = []
+        self.trial_clicks = self.trial_dictionary[self.trial_id]
+        self.clicking_active = False
+
 
     def dot_clicked(self):
         """Updates the information label and the number of clicks left not in that
@@ -386,10 +419,17 @@ class Window(QDialog):
         self.trial_clicks -= 1
         self.update_info_label()
         if self.trial_clicks == 0:
-            self.trial_id += 1
-            self.trial_clicks = self.trial_dictionary[self.trial_id]
-            self.clicking_active = False
-            self.next_button.setEnabled(True)
+            self.trial_durations.append(time.time() - self.trial_starts[-1])
+            if self.trial_id == 15:
+                self.trial_id = 0
+                self.end_trial()
+            else:
+                self.trial_id += 1
+                self.clicked_dots = []
+                self.trial_clicks = self.trial_dictionary[self.trial_id]
+                self.clicking_active = False
+                self.next_button.setEnabled(True)
+                self.stop_button.setEnabled(True)
 
 
     def detect_clicked_dot(self, dots_list, event):
