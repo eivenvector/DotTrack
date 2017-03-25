@@ -155,7 +155,7 @@ class Window(QDialog):
 
         # text field setup
         self.text_field = QLineEdit()
-        self.text_field.setPlaceholderText("Patient ID")
+        self.text_field.setPlaceholderText("Participant ID")
         self.text_field.setMaximumWidth(200)
 
         # next button setup
@@ -182,7 +182,7 @@ class Window(QDialog):
         # set up the message box
         self.pid_message = QMessageBox()
         self.pid_message.setIcon(QMessageBox.Critical)
-        self.pid_message.setText("Please add a Patient ID.")
+        self.pid_message.setText("Please add a Participant ID.")
         self.pid_message.setStandardButtons(QMessageBox.Ok)
 
         # set up stop message box
@@ -240,6 +240,8 @@ class Window(QDialog):
         begin.
         """
         if not self.clicking_active:
+            if self.trial_id == 1:
+                self.total_duration = time.time()
             self.update_info_label()
             self.setup_dots()
             self.draw_dots()
@@ -403,6 +405,7 @@ class Window(QDialog):
         """End the trial of 15 subtrials and reset the page. Also write output
         file.
         """
+        self.total_duration = time.time() - self.total_duration
         self.next_button.setEnabled(False)
         self.track_button.setEnabled(True)
         self.track_button.setText("Begin Tracking")
