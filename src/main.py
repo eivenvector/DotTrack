@@ -67,6 +67,7 @@ class Window(QDialog):
         self.clicked_dots = []
         self.trial_starts = []
         self.trial_durations = []
+        self.correct_dots = np.sort(list(self.trial_dictionary.values()))
         self.total_duration = 0
         self.output_file = ""
 
@@ -410,6 +411,8 @@ class Window(QDialog):
         self.clicked_dots = []
         self.trial_clicks = self.trial_dictionary[self.trial_id]
         self.clicking_active = False
+        print(self.trial_durations)
+        print(self.correct_dots)
 
 
     def dot_clicked(self):
@@ -463,6 +466,7 @@ class Window(QDialog):
             else:
                 self.clicked_dots.append(selected_dot)
                 selected_dot.set_color(INCORRECT_COLOR)
+                self.correct_dots[self.trial_id] -= 1
                 self.canvas.draw()
             self.dot_clicked()
 
