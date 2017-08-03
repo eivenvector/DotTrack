@@ -29,7 +29,7 @@ NUMBER_OF_DOTS = 10
 NUMBER_OF_TRACK_DOTS = 2
 VELOCITY = 3 # in data units / s
 BLINKING_DURATION = 2 * 1000 # in ms
-TRIAL_DURATION = 3 * 1000 # in ms
+TRIAL_DURATION = 10 * 1000 # in ms
 INTERVAL = 30 # in ms
 TRIAL_DICTIONARY = {0: 2, 1: 2, 2: 2, 3: 3, 4: 3,
                     5: 3, 6: 3, 7: 3, 8: 4, 9: 4,
@@ -177,7 +177,7 @@ class Window(QDialog):
         self.info_label.setMaximumWidth(300)
         self.info_label.setMinimumWidth(300)
         self.info_label.setMaximumHeight(20)
-        self.info_label.setFont(QFont("Arial",20, QFont.Normal ))
+        self.info_label.setFont(QFont("Arial",12, QFont.Normal ))
 
         # Set up the bottom layout
         self.bottom_layout = QHBoxLayout()
@@ -498,6 +498,9 @@ class Window(QDialog):
         '''When the button is released, the selection is made if the release
         happens inside of a dot.
         '''
+
+        # TODO, use _distance to determine if highlighted_dot is also an option
+        # for clicked dot. if so then click that dot.
         self.mouse_pressed = False
         if (event.xdata is not None):
             selected_dot = self.detect_clicked_dot(self.dots, event)
