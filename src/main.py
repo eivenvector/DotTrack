@@ -29,7 +29,7 @@ NUMBER_OF_DOTS = 10
 NUMBER_OF_TRACK_DOTS = 2
 VELOCITY = 3 # in data units / s
 BLINKING_DURATION = 2 * 1000 # in ms
-TRIAL_DURATION = 10 * 1000 # in ms
+TRIAL_DURATION = 3 * 1000 # in ms
 INTERVAL = 30 # in ms
 TRIAL_DICTIONARY = {0: 2, 1: 2, 2: 2, 3: 3, 4: 3,
                     5: 3, 6: 3, 7: 3, 8: 4, 9: 4,
@@ -360,7 +360,6 @@ class Window(QDialog):
         """
         for dot in self.tracked_dots.values():
             if dot.color == BLINKING_COLOR:
-                print("BLACK AGAIN BLINK")
                 dot.set_color(COLOR)
                 dot.color = COLOR
             else:
@@ -444,7 +443,6 @@ class Window(QDialog):
             for dot in self.dots:
                 if (dot.id in self.tracked_dots and
                     dot not in self.clicked_dots):
-                    print(dot)
                     dot.set_color(UNSELECTED_COLOR)
                     self.canvas.draw()
             if self.trial_id == 15:
@@ -506,6 +504,10 @@ class Window(QDialog):
             selected_dot = self.detect_clicked_dot(self.dots, event)
         else:
             selected_dot = None
+
+        if (self._distance(self.highlighted_dot.center,
+                                (event.xdata, event.ydata)) < 0.3):
+            selected_dot = self.highlighted_dot
         if (selected_dot is not None
             and selected_dot not in self.clicked_dots
             and self.valid_click):
@@ -522,9 +524,6 @@ class Window(QDialog):
         elif (selected_dot is None
               and self.highlighted_dot is not None
               and self.highlighted_dot not in self.clicked_dots):
-            print(selected_dot)
-            print(self.clicked_dots)
-            print("BLACK AGAIN")
             self.highlighted_dot.set_color(COLOR)
             self.canvas.draw()
         self.highlighted_dot = None
