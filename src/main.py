@@ -23,6 +23,7 @@ COLOR = 'black'
 SELECTION_COLOR = 'gray'
 BLINKING_COLOR = 'yellow'
 INCORRECT_COLOR = 'red'
+UNSELECTED_COLOR = 'green'
 START_FULLSCREEN = True
 NUMBER_OF_DOTS = 10
 NUMBER_OF_TRACK_DOTS = 2
@@ -64,7 +65,7 @@ class Window(QDialog):
         self.dot_motion_active = False
         self.clicking_active = False
         self.trial_dictionary = TRIAL_DICTIONARY
-        self.trial_id = 0 
+        self.trial_id = 0
         self.trial_clicks = self.trial_dictionary[self.trial_id]
         self.clicked_dots = []
         self.trial_starts = []
@@ -359,6 +360,7 @@ class Window(QDialog):
         """
         for dot in self.tracked_dots.values():
             if dot.color == BLINKING_COLOR:
+                print("BLACK AGAIN BLINK")
                 dot.set_color(COLOR)
                 dot.color = COLOR
             else:
@@ -422,9 +424,11 @@ class Window(QDialog):
         self.clicked_dots = []
         self.trial_clicks = self.trial_dictionary[self.trial_id]
         self.clicking_active = False
-        trial_duration_string = [format(x, '.2f') for x in self.trial_durations]
+        trial_duration_string = [format(x * 1000, '.0f') for x in self.trial_durations]
         correct_dots_string = [str(x) for x in self.correct_dots]
         with open('output_file.txt', 'w') as f:
+            f.write(self.text_field.text())
+            f.write('\n')
             f.write(",".join(trial_duration_string))
             f.write('\n')
             f.write(",".join(correct_dots_string))
@@ -437,6 +441,12 @@ class Window(QDialog):
         self.update_info_label()
         if self.trial_clicks == 0:
             self.trial_durations.append(time.time() - self.trial_starts[-1])
+            for dot in self.dots:
+                if (dot.id in self.tracked_dots and
+                    dot not in self.clicked_dots):
+                    print(dot)
+                    dot.set_color(UNSELECTED_COLOR)
+                    self.canvas.draw()
             if self.trial_id == 15:
                 self.trial_id = 0
                 self.end_trial()
@@ -509,8 +519,12 @@ class Window(QDialog):
         elif (selected_dot is None
               and self.highlighted_dot is not None
               and self.highlighted_dot not in self.clicked_dots):
+            print(selected_dot)
+            print(self.clicked_dots)
+            print("BLACK AGAIN")
             self.highlighted_dot.set_color(COLOR)
             self.canvas.draw()
+        self.highlighted_dot = None
 
     def onmouse(self, event):
         '''If the mouse moves while the user has the cursor pressed the selection should be
