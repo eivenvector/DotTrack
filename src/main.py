@@ -20,6 +20,7 @@ FACE_COLOR = 'white'
 RADIUS = 0.3
 DT = 0.05
 COLOR = 'black'
+SELECTION_COLOR = 'gray'
 BLINKING_COLOR = 'yellow'
 INCORRECT_COLOR = 'red'
 START_FULLSCREEN = True
@@ -57,12 +58,13 @@ class Window(QDialog):
         # initialize the dots list
         self.dots = []
         self.tracked_dots = {}
+        self.highlighted_dot = None
 
         # keep track of the trials
         self.dot_motion_active = False
         self.clicking_active = False
         self.trial_dictionary = TRIAL_DICTIONARY
-        self.trial_id = 14
+        self.trial_id = 0 
         self.trial_clicks = self.trial_dictionary[self.trial_id]
         self.clicked_dots = []
         self.trial_starts = []
@@ -70,6 +72,7 @@ class Window(QDialog):
         self.correct_dots = np.sort(list(self.trial_dictionary.values()))
         self.total_duration = 0
         self.output_file = ""
+        self.mouse_pressed = False
 
     def setup_dots(self):
         """Removes any dots on the canvas and generates a new list of them.
@@ -97,8 +100,12 @@ class Window(QDialog):
         for i in range(self.trial_clicks):
             self.tracked_dots[self.dots[i].id] = (self.dots[i])
 
+    @property
+    def valid_click(self):
+        return self.trial_clicks > 0 and self.clicking_active
+
     def generate_velocity(self, mag=1.0):
-        """ Generate a velocity with magnitude of mag.
+        """Generate a velocity with magnitude of mag.
         Returns:
             vel: a velocity vector as a 2-tuple
         """
@@ -148,10 +155,10 @@ class Window(QDialog):
         self.track_button.setMaximumWidth(200)
 
         # stop button setup
-        self.stop_button = QPushButton('Stop Tracking')
-        self.stop_button.clicked.connect(self.stop_tracking_button_clicked)
-        self.stop_button.setEnabled(False)
-        self.stop_button.setMaximumWidth(200)
+        # self.stop_button = QPushButton('Stop Tracking')
+        # self.stop_button.clicked.connect(self.stop_tracking_button_clicked)
+        # self.stop_button.setEnabled(False)
+        # self.stop_button.setMaximumWidth(200)
 
         # text field setup
         self.text_field = QLineEdit()
@@ -174,7 +181,7 @@ class Window(QDialog):
         # Set up the bottom layout
         self.bottom_layout = QHBoxLayout()
         self.bottom_layout.addWidget(self.track_button)
-        self.bottom_layout.addWidget(self.stop_button)
+        #self.bottom_layout.addWidget(self.stop_button)
         self.bottom_layout.addWidget(self.info_label)
         self.bottom_layout.addWidget(self.next_button)
         self.bottom_layout.addWidget(self.text_field)
@@ -329,7 +336,7 @@ class Window(QDialog):
         """
         if (self._blink_stage(i)):
             if i == 0:
-                self.stop_button.setEnabled(False)
+                #self.stop_button.setEnabled(False)
                 self.next_button.setEnabled(False)
                 self.dot_motion_active = True
             if i % 6 == 0:
@@ -384,8 +391,9 @@ class Window(QDialog):
 
         # refresh canvas
         self.canvas.draw()
+        self.cid = self.figure.canvas.mpl_connect('button_release_event', self.onrelease)
         self.cid = self.figure.canvas.mpl_connect('button_press_event', self.onclick)
-
+        self.cid = self.figure.canvas.mpl_connect('motion_notify_event', self.onmouse)
 
     def _distance(self, loc1, loc2):
         """Outputs distance between two tuples (x, y)
@@ -409,14 +417,17 @@ class Window(QDialog):
         self.next_button.setEnabled(False)
         self.track_button.setEnabled(True)
         self.track_button.setText("Begin Tracking")
-        self.stop_button.setEnabled(False)
+        #self.stop_button.setEnabled(False)
         self.text_field.setReadOnly(False)
         self.clicked_dots = []
         self.trial_clicks = self.trial_dictionary[self.trial_id]
         self.clicking_active = False
-        print(self.trial_durations)
-        print(self.correct_dots)
-
+        trial_duration_string = [format(x, '.2f') for x in self.trial_durations]
+        correct_dots_string = [str(x) for x in self.correct_dots]
+        with open('output_file.txt', 'w') as f:
+            f.write(",".join(trial_duration_string))
+            f.write('\n')
+            f.write(",".join(correct_dots_string))
 
     def dot_clicked(self):
         """Updates the information label and the number of clicks left not in that
@@ -435,7 +446,7 @@ class Window(QDialog):
                 self.trial_clicks = self.trial_dictionary[self.trial_id]
                 self.clicking_active = False
                 self.next_button.setEnabled(True)
-                self.stop_button.setEnabled(True)
+                #self.stop_button.setEnabled(True)
 
 
     def detect_clicked_dot(self, dots_list, event):
@@ -458,11 +469,34 @@ class Window(QDialog):
         return circle
 
     def onclick(self, event):
-        '''Event handler which prints information about the click.
+        '''When a button is clicked, and while it is being held down it will be a
+        different color.
         '''
+        self.mouse_pressed = True
         selected_dot = self.detect_clicked_dot(self.dots, event)
-        if selected_dot != None and selected_dot not in self.clicked_dots and self.trial_clicks > 0 and self.clicking_active:
-            if(selected_dot.id in self.tracked_dots):
+        if (selected_dot is not None and
+            selected_dot not in self.clicked_dots
+            and self.valid_click):
+            self.highlighted_dot = selected_dot
+            selected_dot.set_color(SELECTION_COLOR)
+            self.canvas.draw()
+
+
+
+
+    def onrelease(self, event):
+        '''When the button is released, the selection is made if the release
+        happens inside of a dot.
+        '''
+        self.mouse_pressed = False
+        if (event.xdata is not None):
+            selected_dot = self.detect_clicked_dot(self.dots, event)
+        else:
+            selected_dot = None
+        if (selected_dot is not None
+            and selected_dot not in self.clicked_dots
+            and self.valid_click):
+            if (selected_dot.id in self.tracked_dots):
                 self.clicked_dots.append(selected_dot)
                 selected_dot.set_color(BLINKING_COLOR)
                 self.canvas.draw()
@@ -472,6 +506,27 @@ class Window(QDialog):
                 self.correct_dots[self.trial_id] -= 1
                 self.canvas.draw()
             self.dot_clicked()
+        elif (selected_dot is None
+              and self.highlighted_dot is not None
+              and self.highlighted_dot not in self.clicked_dots):
+            self.highlighted_dot.set_color(COLOR)
+            self.canvas.draw()
+
+    def onmouse(self, event):
+        '''If the mouse moves while the user has the cursor pressed the selection should be
+        undone and the color should change back.
+        '''
+        # if (self.mouse_pressed):
+        #     if (self.highlighted_dot is not None):
+        #         # check to see if dot is still selected
+        #         # if not reset the instance variable
+        #         # if so do nothing.
+        #         if (self.highlighted_dot == self.detect_clicked_dot(self.dots, event)):
+        #             pass
+        #         else:
+        #             self.highlighted_dot.set_color(COLOR)
+        #             self.highlighted_dot = None
+        #
 
 
 if __name__ == '__main__':
