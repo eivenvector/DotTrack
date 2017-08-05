@@ -505,7 +505,8 @@ class Window(QDialog):
         else:
             selected_dot = None
 
-        if (self._distance(self.highlighted_dot.center,
+        if (self.highlighted_dot is not None and
+            self._distance(self.highlighted_dot.center,
                                 (event.xdata, event.ydata)) < 0.3):
             selected_dot = self.highlighted_dot
         if (selected_dot is not None
